@@ -33,15 +33,19 @@ proc `[]`*[T](r: var SparseRow[T], x: int): T =
 proc `[]=`*[T](r: var SparseRow[T], x: int, v: T) =
   tables.`[]=`(r, x, v)
 
+iterator items*[T](m: SparseMap[T]): (int, int, T) =
+  for y, l in m:
+    for x, v in l:
+      yield (x, y, m.get(x, y))
+
 proc draw*[T](m: SparseMap[T], fn: TileGen): string =
-  var (xmin, xmax, ymin, ymax) = (int.high, int.low, int.high, int.low)
   let normal = "\e[0m"
   let border = "\e[33m"
   let grid = "\e[1;30m"
-  for y, l in m:
-    (ymin, ymax) = (ymin.min y, ymax.max y)
-    for x, v in l:
-      (xmin, xmax) = (xmin.min x, xmax.max x)
+  var xs, ys: seq[int]
+  for (x, y, v) in m:
+    xs.add x; ys.add y
+  let (xmin, xmax, ymin, ymax) = (xs.min, xs.max, ys.min, ys.max)
   result.add border & "╭" & repeat("─", xmax-xmin+1) & "╮" & normal & "\n"
   for y in ymin..ymax:
     result.add border & "│" & normal
@@ -71,11 +75,6 @@ proc count*[T](m: SparseMap[T], w: T): int =
     for x, v in l:
       if v == w:
         inc result
-
-iterator items*[T](m: SparseMap[T]): (int, int, T) =
-  for y, l in m:
-    for x, v in l:
-      yield (x, y, m.get(x, y))
 
 proc slice*[T](m: SparseMap[T], x1, y1, x2, y2: int): seq[seq[T]] =
   for y in y1..y2:
