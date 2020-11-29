@@ -1,15 +1,33 @@
 
-import tables, strutils
+import tables, strutils, hashes
 
 type
-  SparseRow*[T] = Table[int, T]
-  SparseMap*[T] = Table[int, SparseRow[T]]
+
+  Point = object
+    x, y: int
+
+  SparseMap*[T] = Table[Point, T]
   TileGen*[T] = proc(v: T): char
 
+
+proc posmap(n: int): int =
+  if n >= 0:
+    n * 2
+  else:
+    n * -2 - 1
+
+proc cantor(x, y: int): Hash =
+  result = (x+y) * (x+y+1) /% 2 + y
+
+proc hash(p: Point): Hash =
+  when true:
+    cantor(posmap(p.x), posmap(p.y))
+  else:
+    !$(p.x !& p.y * 500)
+
 proc set*[T](m: var SparseMap[T], x, y: int, v: T) =
-  if y notin m:
-    m[y] = SparseRow[T]()
-  m[y][x] = v
+  let p = Point(x: x, y: y)
+  m[p] = v
 
 proc clear*[T](m: var SparseMap[T], x, y: int) =
   if y notin m:
@@ -18,25 +36,12 @@ proc clear*[T](m: var SparseMap[T], x, y: int) =
     m[y].del x
 
 proc get*[T](m: SparseMap[T], x, y: int): T =
-  if y in m and x in m[y]:
-    result = m[y][x]
-
-proc `[]`*[T](m: var SparseMap[T], y: int): var SparseRow[T] =
-  if y notin m:
-    m[y] = SparseRow[T]()
-  tables.`[]`(m, y)
-
-proc `[]`*[T](r: var SparseRow[T], x: int): T =
-  if x in r:
-    return tables.`[]`(r, x)
-
-proc `[]=`*[T](r: var SparseRow[T], x: int, v: T) =
-  tables.`[]=`(r, x, v)
+  let p = Point(x: x, y: y)
+  m.getOrDefault(p, T.default)
 
 iterator items*[T](m: SparseMap[T]): (int, int, T) =
-  for y, l in m:
-    for x, v in l:
-      yield (x, y, m.get(x, y))
+  for p, v in m.pairs:
+    yield (p.x, p.y, v)
 
 proc draw*[T](m: SparseMap[T], fn: TileGen): string =
   let normal = "\e[0m"
