@@ -1,9 +1,7 @@
 
-import strutils, math
+import strutils, math, sequtils
 
-var vs: seq[int]
-for l in lines("input"):
-  vs.add l.parseInt()
+let vs = toSeq(lines("input")).map(parseInt)
 
 proc test(l: string, ts: openArray[int]) =
   if sum(ts) == 2020:
