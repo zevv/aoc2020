@@ -7,7 +7,7 @@ let p = peg lines:
   line <- >+Digit * "-" * >+Digit * " " * >Alpha * ": " * >+Alpha * '\n':
     let (v1, v2, letter, pwd) = (parseInt($1), parseInt($2), ($3)[0], $4)
 
-    if pwd.countIt(it == letter) in v1..v2:
+    if pwd.count(letter) in v1..v2:
       inc part1
 
     if pwd[v1-1] == letter xor pwd[v2-1] == letter:
