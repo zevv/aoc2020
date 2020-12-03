@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e 
+
+for a in [0-9]*; do
+    echo "==== " $a
+    cd $a
+    nim r -f --hints:off main.nim
+    cd ..
+done
