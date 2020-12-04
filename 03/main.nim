@@ -9,8 +9,13 @@ const
 proc isTree(s: tuple[x, y: int]): bool =
   m[s.y * (w+1) + (s.x mod w)] == '#'
 
-proc run(s: tuple[x, y: int]): int =
-  toSeq(0 ..< h/%s.y).countIt(isTree (it*s.x, it*s.y))
+proc run(s: tuple[dx, dy: int]): int =
+  var x, y: int
+  while y < h:
+    x += s.dx
+    y += y.dy
+    if isTree (x, y):
+      inc result
 
 echo "part1: ", run (3, 1)
 echo "part2: ", ss.map(run).prod
