@@ -18,8 +18,7 @@ let p = peg rules:
   contains <- contents * *(", " * contents) | "no other bags"
   contents <- >+Digit * " " * bags:
     bag.kids[$2] = parseInt($1)
-  bags <- >(word * " " * word) * " bag" * ?"s"
-  word <- +Alpha
+  bags <- >(+Alpha * " " * +Alpha) * " bag" * ?"s"
 
 if p.matchfile("input").ok:
 
