@@ -1,5 +1,5 @@
 import strutils, math
-  
+
 let
   cos = [1, 0, -1, 0]
   sin = [0, 1, 0, -1]
