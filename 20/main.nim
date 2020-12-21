@@ -1,9 +1,9 @@
-import npeg, tables, strutils, sequtils, math
+import npeg, tables, strutils, sequtils, math, sets
 
 type
   Tile = object
     id: int
-    edges: seq[string]
+    edges: HashSet[string]
     used: bool
     rows: seq[string]
     neighbours: int
@@ -27,18 +27,15 @@ var rows: seq[string]
 let p = peg input:
   input <- +tile * !1
   tile <- header * '\n' * +row * '\n':
-    tiles.add Tile(id: parseInt($1), edges: calcEdges(rows), rows: rows)
+    tiles.add Tile(id: parseInt($1), edges: calcEdges(rows).toSet, rows: rows)
     rows.reset
   header <- "Tile " * >+Digit * ':'
   row <- >+{'#','.'} * '\n':
     rows.add $1
 
-if p.matchFile("input2").ok:
+if p.matchFile("input").ok:
   for t1 in tiles.mItems:
-    for t2 in tiles.mItems:
+    for t2 in tiles:
       if t1 != t2:
-        for e in t1.edges:
-          if e in t2.edges:
-            inc t1.neighbours
-
-echo tiles.filterIt(it.neighbours == 4).mapIt(it.id).prod()
+        t1.neighbours += card(t1.edges * t2.edges)
+  echo tiles.filterIt(it.neighbours == 4).mapIt(it.id).prod()
