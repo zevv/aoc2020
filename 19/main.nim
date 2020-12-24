@@ -1,83 +1,156 @@
 
-import strutils, tables, npeg, sequtils
+import npeg
 
-type
-  Choice = seq[string]
 
-  Rule = object
-    choices: seq[Choice]
-    lit: char
+let p = peg r0:
+  #r8   <- r42
+  #r11  <- r42 * r31
 
-  Rules = Table[string, Rule]
+  r8 <- r42 | r42 * 8
+  r11 <- r42 * r31 | r42 * r11 * r31
 
-var rules: Rules
-var rule: Rule
-var choice: Choice
-var lit: string
+  r0   <- r8 * r11 * !1
+  r1   <- r5 * r24 | r92 * r70
+  r2   <- r5 * r5 | r92 * r44
+  r3   <- r1 * r5 | r97 * r92
+  r4   <- r92 * r5 | r5 * r5
+  r5   <- "a"
+  r6   <- r78 * r5 | r88 * r92
+  r7   <- r5 * r36 | r92 * r106
+  r9   <- r16 * r92 | r50 * r5
+  r10  <- r5 * r70 | r92 * r48
+  r12  <- r92 * r117 | r5 * r21
+  r13  <- r92 * r88 | r5 * r117
+  r14  <- r55 * r5 | r4 * r92
+  r15  <- r92 * r51 | r5 * r105
+  r16  <- r117 * r5 | r111 * r92
+  r17  <- r65 * r5 | r77 * r92
+  r18  <- r125 * r5 | r58 * r92
+  r19  <- r64 * r5 | r1 * r92
+  r20  <- r92 * r103 | r5 * r21
+  r21  <- r5 * r92 | r5 * r5
+  r22  <- r103 * r92 | r88 * r5
+  r23  <- r44 * r70
+  r24  <- r5 * r5
+  r25  <- r92 * r111 | r5 * r4
+  r26  <- r5 * r34 | r92 * r61
+  r27  <- r92 * r12 | r5 * r109
+  r28  <- r92 * r30 | r5 * r109
+  r29  <- r94 * r5 | r65 * r92
+  r30  <- r92 * r24 | r5 * r117
+  r31  <- r92 * r114 | r5 * r87
+  r32  <- r40 * r5 | r13 * r92
+  r33  <- r5 * r92
+  r34  <- r92 * r9 | r5 * r134
+  r35  <- r104 * r5 | r10 * r92
+  r36  <- r92 * r71 | r5 * r43
+  r37  <- r88 * r92 | r68 * r5
+  r38  <- r27 * r5 | r17 * r92
+  r39  <- r5 * r4 | r92 * r21
+  r40  <- r24 * r5 | r24 * r92
+  r41  <- r5 * r70 | r92 * r4
+  r42  <- r7 * r92 | r86 * r5
+  r43  <- r120 * r92 | r122 * r5
+  r44  <- r5 | r92
+  r45  <- r108 * r5 | r119 * r92
+  r46  <- r98 * r92 | r19 * r5
+  r47  <- r78 * r5 | r4 * r92
+  r48  <- r92 * r92 | r92 * r5
+  r49  <- r33 * r5 | r21 * r92
+  r50  <- r53 * r92 | r48 * r5
+  r51  <- r5 * r111 | r92 * r117
+  r52  <- r92 * r15 | r5 * r101
+  r53  <- r92 * r5
+  r54  <- r5 * r4 | r92 * r78
+  r55  <- r92 * r92 | r5 * r92
+  r56  <- r74 * r92 | r62 * r5
+  r57  <- r33 * r5 | r70 * r92
+  r58  <- r28 * r92 | r133 * r5
+  r59  <- r5 * r88 | r92 * r24
+  r60  <- r5 * r21 | r92 * r4
+  r61  <- r92 * r32 | r5 * r102
+  r62  <- r128 * r5 | r60 * r92
+  r63  <- r92 * r91 | r5 * r64
+  r64  <- r92 * r70
+  r65  <- r53 * r5 | r48 * r92
+  r66  <- r5 * r24
+  r67  <- r4 * r92
+  r68  <- r5 * r5 | r44 * r92
+  r69  <- r2 * r5 | r111 * r92
+  r70  <- r44 * r44
+  r71  <- r29 * r5 | r96 * r92
+  r72  <- r92 * r55 | r5 * r24
+  r73  <- r24 * r92
+  r74  <- r92 * r20 | r5 * r82
+  r75  <- r63 * r92 | r112 * r5
+  r76  <- r92 * r70 | r5 * r53
+  r77  <- r21 * r92 | r78 * r5
+  r78  <- r92 * r92 | r5 * r5
+  r79  <- r92 * r75 | r5 * r38
+  r80  <- r5 * r39 | r92 * r6
+  r81  <- r21 * r5 | r68 * r92
+  r82  <- r5 * r53 | r92 * r68
+  r83  <- r5 * r48 | r92 * r111
+  r84  <- r92 * r100 | r5 * r57
+  r85  <- r92 * r55 | r5 * r33
+  r86  <- r5 * r115 | r92 * r18
+  r87  <- r130 * r5 | r126 * r92
+  r88  <- r44 * r92 | r92 * r5
+  r89  <- r5 * r54 | r92 * r47
+  r90  <- r92 * r70 | r5 * r117
+  r91  <- r117 * r5 | r117 * r92
+  r92  <- "b"
+  r93  <- r92 * r89 | r5 * r107
+  r94  <- r21 * r5 | r111 * r92
+  r95  <- r37 * r92 | r105 * r5
+  r96  <- r92 * r73 | r5 * r1
+  r97  <- r92 * r78 | r5 * r2
+  r98  <- r5 * r40 | r92 * r72
+  r99  <- r67 * r92 | r23 * r5
+  r100 <- r53 * r92 | r2 * r5
+  r101 <- r92 * r83 | r5 * r127
+  r102 <- r59 * r5 | r131 * r92
+  r103 <- r5 * r44 | r92 * r5
+  r104 <- r5 * r117
+  r105 <- r5 * r53 | r92 * r55
+  r106 <- r110 * r5 | r56 * r92
+  r107 <- r124 * r92 | r90 * r5
+  r108 <- r59 * r5 | r81 * r92
+  r109 <- r5 * r21 | r92 * r78
+  r110 <- r121 * r92 | r35 * r5
+  r111 <- r92 * r5 | r5 * r92
+  r112 <- r41 * r5 | r132 * r92
+  r113 <- r118 * r92 | r84 * r5
+  r114 <- r79 * r92 | r26 * r5
+  r115 <- r46 * r5 | r93 * r92
+  r116 <- r92 * r70 | r5 * r2
+  r117 <- r92 * r92
+  r118 <- r92 * r116 | r5 * r49
+  r119 <- r25 * r5 | r85 * r92
+  r120 <- r5 * r129 | r92 * r47
+  r121 <- r92 * r90 | r5 * r14
+  r122 <- r5 * r66 | r92 * r22
+  r123 <- r5 * r3 | r92 * r99
+  r124 <- r92 * r55 | r5 * r4
+  r125 <- r95 * r92 | r80 * r5
+  r126 <- r5 * r45 | r92 * r113
+  r127 <- r117 * r5 | r55 * r92
+  r128 <- r92 * r2 | r5 * r68
+  r129 <- r5 * r111 | r92 * r88
+  r130 <- r92 * r52 | r5 * r123
+  r131 <- r103 * r92 | r111 * r5
+  r132 <- r21 * r5 | r24 * r92
+  r133 <- r5 * r100 | r92 * r69
+  r134 <- r129 * r5 | r76 * r92
 
-proc `$`(c: Choice): string = 
-  c.join(" * ")
 
-proc `$`(r: Rule): string =
-  if r.lit != '\0':
-    '"' & $r.lit & '"'
-  else:
-    "(" & r.choices.join(" | ") & ")"
-    
+var ans = 0
 
-# Recursively check if the subject matches the given rule
+for l in lines("input"):
+  echo l
+  if p.match(l).ok:
+    inc ans
 
-proc parse(s: string, id: string, o: var int, prefix = ""): bool =
-  let rule = rules[id]
+echo ans
 
-  if o == s.len:
-    return true
-
-  # Lit type?
-  if s[o] == rule.lit:
-    inc o
-    return true
-
-  # Check for each choice if this matches. If not, backtrack and
-  # try the next one
-  var oSave = o
-  for c in rule.choices:
-    o = oSave
-    var ok = true
-    for id in c:
-      if o < s.len:
-        let r = parse(s, id, o, prefix & " ")
-        if not r:
-          ok = false
-          break
-      else:
-        ok = false
-    if ok:
-      return true
-
-var matches = 0
-
-let p = peg input:
-  input <- rules * '\n' * messages * !1
-  s <- *' '
-  rules <- *(rule * '\n')
-  rule <- >+Digit * ": " * (lit | choices):
-    rules[$1] = rule
-    rule.reset
-  lit <- '"' * >Alpha * '"':
-    rule.lit = ($1)[0]
-  choices <- seq * *( "|" * s * seq)
-  seq <- *number:
-    rule.choices.add choice
-    choice.reset
-  number <- >+Digit * s:
-    choice.add $1
-  messages <- *(message * '\n')
-  message <- +Alpha:
-    var o = 0
-    if parse($0, "0", o):
-      inc matches
-
-echo p.matchFile("input2").ok
-echo matches
 
